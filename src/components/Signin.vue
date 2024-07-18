@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h2>Sign In to Your Account</h2>
+    <h3>Sign In to Your Account</h3>
     <form @submit.prevent="handleSignin">
-      <div>
-        <label for="email">Email: </label>
+      <div class="tableRow">
+        <label for="email">Email: &nbsp; </label>
         <input class="input" type="email" v-model="email" />
       </div>
-      <div>
-        <label for="password">Password: </label>
+      <div class="tableRow">
+        <label for="password">Password: &nbsp; </label>
         <input class="input" type="password" v-model="password" />
       </div>
       <div>
@@ -66,6 +66,19 @@ export default {
 };
 </script>
 <style scoped>
+form .tableRow {
+  display: table-row;
+}
+form .tableRow label,
+input {
+  display: table-cell;
+  margin-top: 0.5rem;
+  text-align: end;
+}
+
+form label {
+  margin-inline-end: 0.25rem;
+}
 .signInButton {
   margin-top: 1rem;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;

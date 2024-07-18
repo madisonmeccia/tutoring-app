@@ -1,4 +1,6 @@
 <script setup>
+import Multiselect from "vue-multiselect";
+import "vue-multiselect/dist/vue-multiselect.css";
 import { ref, toRefs, defineProps } from "vue";
 import { useToast } from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-sugar.css";
@@ -12,7 +14,7 @@ const name = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const emailAddress = ref("");
-const subject = ref("");
+const subjects = ref([]);
 const bio = ref("");
 const picture = ref("");
 const $toast = useToast();
@@ -42,7 +44,7 @@ const loadUser = async () => {
   emailAddress.value = user.email;
   // password.value = user.password;
   picture.value = user.picture;
-  subject.value = user.subject;
+  subjects.value = user.subjects;
   bio.value = user.bio;
 };
 const init = () => {
@@ -72,7 +74,7 @@ const isFormInvalid = () => {
     password.value.trim() == "" ||
     confirmPassword.value.trim() == "" ||
     //confirmPassword.value.trim() == "" ||
-    subject.value.trim() == "" ||
+    subjects.value == [] ||
     bio.value.trim() == ""
   );
 };
@@ -96,7 +98,7 @@ const addTutor = async () => {
     const tutor = {
       name: name.value,
       email: emailAddress.value,
-      subject: subject.value,
+      subjects: subjects.value,
       bio: bio.value,
       picture: picture.value,
     };
@@ -120,7 +122,7 @@ const updateTutor = async () => {
     //loading.value = true;
     const tutor = {
       name: name.value,
-      subject: subject.value,
+      subjects: subjects.value,
       bio: bio.value,
       picture: picture.value,
     };
@@ -198,13 +200,14 @@ const submitChanges = () => {
           />
         </div>
 
-        <p class="required">Subject:</p>
+        <p class="required">Subjects:</p>
         <div class="field">
-          <select v-model="subject">
+          <multiselect v-model="subjects" :options="options"></multiselect>
+          <!-- <select v-model="subject">
             <option v-for="option in options" :value="option.name">
               {{ option.title }}
             </option>
-          </select>
+          </select> -->
         </div>
 
         <p>Bio:</p>

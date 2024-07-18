@@ -16,7 +16,12 @@ const signOut = () => {
 </script>
 
 <template>
-  <h1>Gold Coast Tutoring</h1>
+  <h1>Students for Students Peer Tutoring</h1>
+  <h2>
+    For the safety of our students, all tutoring sessions should be conducted
+    using online conferencing software such as Zoom, Microsoft Teams, or Google
+    Meet.
+  </h2>
 
   <div class="card" v-show="!currentUser">
     <router-link to="/tutorRegister">

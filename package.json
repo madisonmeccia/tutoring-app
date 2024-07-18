@@ -11,6 +11,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.43.4",
     "vue": "^3.2.13",
+    "vue-multiselect": "^3.0.0",
     "vue-router": "^4.0.13",
     "vue-toast-notification": "^3.1.2"
   },
