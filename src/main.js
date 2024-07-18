@@ -15,6 +15,7 @@ const router = createRouter({
   routes: [
     { path: "/about", component: AboutComponent },
     { path: "/home", component: HomeComponent },
+    { path: "/", component: HomeComponent },
     { path: "/tutorRegister", component: TutorRegisterComponent },
     {
       path: "/tutorEdit",
