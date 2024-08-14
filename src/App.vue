@@ -15,18 +15,26 @@ const signOut = () => {
 
 <template>
   <div class="routers">
-    <router-link to="/about">about</router-link>
-    <router-link to="/home">home</router-link>
-    <a @click="signOut" v-show="!!currentUser">sign out</a>
+    <router-link to="/about" class="router grow-2">About Us</router-link>
+    <router-link to="/findTutor" class="router">Find a Tutor</router-link>
+    <router-link to="/becomeTutor" class="router">Be a Tutor</router-link>
+    <router-link to="/faq" class="router">FAQs</router-link>
+    <router-link to="/home" class="router">Home</router-link>
+    <a @click="signOut" v-show="!!currentUser">Sign Out</a>
   </div>
-  <router-view> </router-view>
+  <router-view></router-view>
 </template>
 
 <style scoped>
 .routers {
   display: flex;
-  justify-content: center;
   gap: 0.5rem;
+}
+.router {
+  flex: 1;
+}
+.grow-2 {
+  flex-grow: 2;
 }
 .logo {
   height: 6em;

@@ -1,16 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  --main-bg-color: #1D49A7;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: var(--main-bg-color);
+  color: white;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  height: 100%;
 }
 
 .required::after {
@@ -33,7 +39,7 @@
   display: flex;
   align-items: center;
 }
-  .field select,
+.field select,
 .field textarea,
 .field input {
   width: 100%;
@@ -41,47 +47,28 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  font-size: 2rem;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: lightgray;
 }
 
 body {
-   display: flex;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: lightblue;
-  color: black;
-  font-family: 'Times New Roman', Times, serif;
+  display: flex;
+
   place-items: center;
 }
 h3 {
-  font-size: 1rem;
   padding-top: 2rem;
-  line-height: 1.1;
-  font-family: fantasy;
 }
 
 h1 {
-  font-size: 2rem;
   padding-top: 2rem;
-  line-height: 1.1;
-  font-family: fantasy;
-  color: black;
 }
 h2 {
-  font-size: 1rem;
   padding-top: 2rem;
-  line-height: 1.1;
-  font-family: fantasy;
-  background-color: lightyellow;
 }
-input:required {
-   background-color: lightyellow;
-  
-  }
 
 button {
   border-radius: 8px;
@@ -90,7 +77,8 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: white;
+  color: var(--main-bg-color);
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -108,24 +96,21 @@ button:focus-visible {
   border: 6px solid black;
   border-radius: 1em;
   color: black;
-  font-family:Georgia, 'Times New Roman', Times, serif;
-  font-size:large ;
-  display:flex;
+  font-size: large;
+  display: flex;
   flex-direction:column;
   gap:2em;
 }
 
-.cards{
-
-}
 #app {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  width: 100%;
 }
 
-@media (prefers-color-scheme: light) {
+/* @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -136,4 +121,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */

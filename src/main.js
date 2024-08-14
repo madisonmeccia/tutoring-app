@@ -9,12 +9,16 @@ import TutorRegisterComponent from "./components/TutorRegisterComponent.vue";
 import StudentRegisterComponent from "./components/StudentRegisterComponent.vue";
 import TutorsPageComponent from "./components/TutorsPageComponent.vue";
 import Signin from "./components/Signin.vue";
+import FaqComponent from "./components/FaqComponent.vue";
 export const RESEND_API_KEY = "re_h2sG5VJj_M862dVAZQ8dm7kGtizjwABxU";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: "/about", component: AboutComponent },
+    { path: "/faq", component: FaqComponent },
     { path: "/home", component: HomeComponent },
+    { path: "/findTutor", component: TutorsPageComponent },
+    { path: "/becomeTutor", component: TutorRegisterComponent },
     { path: "/", component: HomeComponent },
     { path: "/tutorRegister", component: TutorRegisterComponent },
     {
