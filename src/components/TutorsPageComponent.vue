@@ -2,13 +2,13 @@
 import { ref } from "vue";
 import { supabase } from "../lib/supabaseClient";
 import { RESEND_API_KEY } from "../main";
-import emailjs from 'emailjs-com';
+import emailjs from "emailjs-com";
 import { useRouter } from "vue-router";
 import Signin from "./Signin.vue";
 const router = useRouter();
 const currentUser = ref(sessionStorage.getItem("currentUser"));
 
-const PUBLIC_EMAILJS_KEY = '0iwuRzrxiSnGFqO4-';
+const PUBLIC_EMAILJS_KEY = "0iwuRzrxiSnGFqO4-";
 const EMAILJS_SERVICEID = "service_biwmoes";
 const EMAILJS_EMAIL_TEMPLATE_ID = "template_lg465f8";
 
@@ -24,7 +24,7 @@ emailjs.init({
   },
   limitRate: {
     // Set the limit rate for the application
-    id: 'app',
+    id: "app",
     // Allow 1 request per 10s
     throttle: 10000,
   },
@@ -36,7 +36,8 @@ const search = async () => {
   const { data } = await supabase
     .from("tutors")
     .select()
-    .eq("subject", searchField.value);
+    .contains("subjects", [searchField.value]);
+
   tutors.value = data;
 };
 const loadTutors = async () => {
@@ -77,24 +78,29 @@ const sendEmail = async (tutor) => {
   // };
   try {
     // TODO: Madison to setup emailjs account with public_key, service_id, and template
-    emailjs.send(EMAILJS_SERVICEID, EMAILJS_EMAIL_TEMPLATE_ID, {
-      from_name: currentStudent.name,
-      to_name: tutor.name,
-      tutoring_subject: tutor.subject,
-      reply_to: userEmail,
-      to_email: tutor.email,
-      from_email: userEmail,
-    }, PUBLIC_EMAILJS_KEY);
-  } catch(error) {
-    console.log({error})
+    emailjs.send(
+      EMAILJS_SERVICEID,
+      EMAILJS_EMAIL_TEMPLATE_ID,
+      {
+        from_name: currentStudent.name,
+        to_name: tutor.name,
+        tutoring_subject: tutor.subject,
+        reply_to: userEmail,
+        to_email: tutor.email,
+        from_email: userEmail,
+      },
+      PUBLIC_EMAILJS_KEY
+    );
+  } catch (error) {
+    console.log({ error });
   }
 };
 </script>
 
 <template>
   <div v-show="!currentUser">
-    <div style="margin: 1rem 0; display: flex; justify-content: center;">
-      <img src="../assets/students-working.png" width="500"/>
+    <div style="margin: 1rem 0; display: flex; justify-content: center">
+      <img src="../assets/students-working.png" width="500" />
     </div>
     <div class="card" v-show="!currentUser">
       <router-link to="/studentRegister">
@@ -107,8 +113,8 @@ const sendEmail = async (tutor) => {
   </div>
   <div v-show="!!currentUser">
     <h1>Find a Tutor!</h1>
-    <div style="margin: 1rem 0; display: flex; justify-content: center;">
-      <img src="../assets/girl-at-computer.png" width="500"/>
+    <div style="margin: 1rem 0; display: flex; justify-content: center">
+      <img src="../assets/girl-at-computer.png" width="500" />
     </div>
     <p>
       Search for a tutor that meets your needs and reach out to them via email.
@@ -123,7 +129,7 @@ const sendEmail = async (tutor) => {
         <!-- <p><img height="200" width="200" v-bind:src="tutor.picture ?? ''" /></p> -->
         <p><strong>Name:</strong> {{ tutor.name }}</p>
         <!-- TODO: make this where you select which subject you are wanting a tutor for -->
-        <p>Subject: {{ tutor.subjects.join(',') }}</p>
+        <p>Subject: {{ tutor.subjects.join(",") }}</p>
         <p>
           <button @click="sendEmail(tutor)">Contact tutor!</button>
         </p>

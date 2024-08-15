@@ -44,7 +44,9 @@ const loadUser = async () => {
   emailAddress.value = user.email;
   // password.value = user.password;
   picture.value = user.picture;
-  subjects.value = user.subjects;
+  subjects.value = user.subjects.map((name) =>
+    options.value.find((subject) => subject.name === name)
+  );
   bio.value = user.bio;
 };
 const init = () => {
@@ -98,7 +100,7 @@ const addTutor = async () => {
     const tutor = {
       name: name.value,
       email: emailAddress.value,
-      subjects: subjects.value,
+      subjects: subjects.value.map((subject) => subject.name),
       bio: bio.value,
       picture: picture.value,
     };
@@ -122,7 +124,7 @@ const updateTutor = async () => {
     //loading.value = true;
     const tutor = {
       name: name.value,
-      subjects: subjects.value,
+      subjects: subjects.value.map((subject) => subject.name),
       bio: bio.value,
       picture: picture.value,
     };
@@ -202,7 +204,16 @@ const submitChanges = () => {
 
         <p class="required">Subjects:</p>
         <div class="field">
-          <multiselect v-model="subjects" :options="options"></multiselect>
+          <multiselect
+            v-model="subjects"
+            label="title"
+            track-by="id"
+            :options="options"
+            :multiple="true"
+            :taggable="true"
+            placeholder="Select subjects"
+          ></multiselect>
+          <pre class="language-json"><code>{{ value }}</code></pre>
           <!-- <select v-model="subject">
             <option v-for="option in options" :value="option.name">
               {{ option.title }}
