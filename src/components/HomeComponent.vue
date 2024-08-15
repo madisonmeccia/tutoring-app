@@ -16,12 +16,12 @@ const signOut = () => {
 </script>
 
 <template>
-  <h1>Students for Students Peer Tutoring</h1>
-  <h2>
-    For the safety of our students, all tutoring sessions should be conducted
-    using online conferencing software such as Zoom, Microsoft Teams, or Google
-    Meet.
-  </h2>
+  <img src="../assets/full-front-page-minus-banner.png" width="1200" class="mt-0" alt="mainPageImage" usemap="#examplemap">
+
+  <map name="examplemap">
+    <area shape="rect" coords="80,1385,500,1435" href="/becomeTutor" alt="Be a Tutor">
+    <area shape="rect" coords="80,1200,500,1250" href="/findTutor" alt="Find a Tutor">
+  </map>
 
   <div class="card" v-show="!currentUser">
     <router-link to="/tutorRegister">
@@ -40,15 +40,11 @@ const signOut = () => {
 </template>
 
 <style scoped>
+
 .read-the-docs {
   color: #888;
 }
-.button {
-  color: seashell;
-  background-color: black;
-  margin-left: 2rem;
-  margin-right: 2rem;
-}
+
 h1 {
   padding-bottom: 2rem;
 }

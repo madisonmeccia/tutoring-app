@@ -191,14 +191,14 @@ const submitChanges = () => {
           />
         </div>
 
-        <p>Picture:</p>
+        <!-- <p>Picture:</p>
         <div class="field">
           <input
             type="file"
             v-on:change="addPicture($event)"
             placeholder="image url"
           />
-        </div>
+        </div> -->
 
         <p class="required">Subjects:</p>
         <div class="field">
@@ -231,4 +231,5 @@ const submitChanges = () => {
 .read-the-docs {
   color: #888;
 }
+
 </style>
