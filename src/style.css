@@ -7,6 +7,7 @@
   line-height: 1.5;
   font-weight: 400;
   --main-bg-color: #1D49A7;
+  --input-bd-color: #6b7280;
 
   background-color: var(--main-bg-color);
   color: white;
@@ -59,16 +60,10 @@ body {
 
   place-items: center;
 }
-h3 {
-  padding-top: 2rem;
-}
 
-h1 {
-  padding-top: 2rem;
-  color:lightgray;
-}
-h2 {
-  padding-top: 2rem;
+h3, h2, h1 {
+  padding-top: 1rem;
+  color: lightgray !important;
 }
 
 button {
@@ -97,6 +92,11 @@ button:disabled,
 button[disabled] {
   color: lightsteelblue;
 }
+
+input {
+  color: black;
+}
+
 .card {
   padding: 2em 0;
   background-color: lightsteelblue;
@@ -107,6 +107,15 @@ button[disabled] {
   display: flex;
   flex-direction:column;
   gap:2em;
+}
+
+.card h2 {
+  color: black !important;
+}
+
+.multiselect .multiselect__tags {
+  border-radius: 1px !important;
+  border-color: var(--input-bd-color) !important;
 }
 
 #app {

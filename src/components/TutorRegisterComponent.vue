@@ -18,7 +18,7 @@ const subjects = ref([]);
 const bio = ref("");
 const $toast = useToast();
 const options = ref([]);
-const title = ref("Add Tutor!");
+const title = ref("Register to Be a Tutor!");
 const buttonTitle = ref("Register");
 
 const isEditing = () => {
@@ -50,8 +50,8 @@ const loadUser = async () => {
 const init = () => {
   loadSubjects();
   if (isEditing()) {
-    title.value = "Update Tutor!";
-    buttonTitle.value = "Update Tutor!";
+    title.value = "Update Tutor Registration";
+    buttonTitle.value = "Update";
   }
   loadUser();
 };
@@ -61,9 +61,9 @@ const checkPassword = () => {
     return;
   }
   if (password.value === confirmPassword.value) {
-    $toast.success("passwords match!");
+    $toast.success("The passwords match!");
   } else {
-    $toast.error("passwords do not match!");
+    $toast.error("The passwords do not match!");
   }
 };
 
@@ -73,7 +73,6 @@ const isFormInvalid = () => {
     emailAddress.value.trim() == "" ||
     password.value.trim() == "" ||
     confirmPassword.value.trim() == "" ||
-    //confirmPassword.value.trim() == "" ||
     subjects.value == [] ||
     bio.value.trim() == ""
   );
@@ -152,8 +151,8 @@ const submitChanges = () => {
   <h1>{{ title }}</h1>
 
   <div class="card">
-    <form v-on:submit.prevent="submitChanges">
-      <div>Enter Information</div>
+    <form class="p-2" v-on:submit.prevent="submitChanges">
+      <h2>Enter Information</h2>
       <div class="fields">
         <p class="required">Name:</p>
         <div class="field">
@@ -211,7 +210,6 @@ const submitChanges = () => {
             :taggable="true"
             placeholder="Select subjects"
           ></multiselect>
-          <pre class="language-json"><code>{{ value }}</code></pre>
           <!-- <select v-model="subject">
             <option v-for="option in options" :value="option.name">
               {{ option.title }}
@@ -221,7 +219,7 @@ const submitChanges = () => {
 
         <p>Bio:</p>
         <div class="field">
-          <textarea v-model="bio" placeholder="tell us about yourself!" />
+          <textarea v-model="bio" placeholder="Tell us about yourself!" />
         </div>
       </div>
       <button type="submit" :disable="isFormInvalid()">

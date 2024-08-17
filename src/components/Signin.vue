@@ -80,7 +80,6 @@ form .tableRow label,
 input {
   display: table-cell;
   margin-top: 0.5rem;
-  text-align: end;
 }
 
 .signInButton {
