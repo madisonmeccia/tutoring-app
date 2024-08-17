@@ -1,13 +1,15 @@
 <script setup>
 import { ref } from "vue";
 import { supabase } from "../lib/supabaseClient";
+import { useToast } from "vue-toast-notification";
 import { RESEND_API_KEY } from "../main";
 import emailjs from "emailjs-com";
 import { useRouter } from "vue-router";
 import Signin from "./Signin.vue";
+import TutorRegisterComponent from "./TutorRegisterComponent.vue";
 const router = useRouter();
 const currentUser = ref(sessionStorage.getItem("currentUser"));
-
+const $toast = useToast();
 const PUBLIC_EMAILJS_KEY = "0iwuRzrxiSnGFqO4-";
 const EMAILJS_SERVICEID = "service_biwmoes";
 const EMAILJS_EMAIL_TEMPLATE_ID = "template_lg465f8";
@@ -69,10 +71,11 @@ const sendEmail = async (tutor) => {
     router.push("/home");
     return;
   }
-  const { currentStudent } = await supabase
+  const { data } = await supabase
     .from("students")
     .select()
     .eq("email", userEmail);
+  const currentStudent = data[0];
   // const currentStudent = {
   //   name: 'Dwight Schrute'
   // };
@@ -84,14 +87,16 @@ const sendEmail = async (tutor) => {
       {
         from_name: currentStudent.name,
         to_name: tutor.name,
-        tutoring_subject: tutor.subject,
+        tutoring_subject: tutor.selectedSubject,
         reply_to: userEmail,
         to_email: tutor.email,
         from_email: userEmail,
       },
       PUBLIC_EMAILJS_KEY
     );
+    $toast.success("The tutor has been contacted!!");
   } catch (error) {
+    $toast.error("There was an error contacting the tutor");
     console.log({ error });
   }
 };
@@ -102,13 +107,14 @@ const sendEmail = async (tutor) => {
     <div style="margin: 1rem 0; display: flex; justify-content: center">
       <img src="../assets/students-working.png" width="500" />
     </div>
-    <div class="card" v-show="!currentUser">
+    <div v-show="!currentUser">
+      <!-- <StudentRegisterComponent></StudentRegisterComponent> -->
       <router-link to="/studentRegister">
         <button class="button" type="button">Register as a student</button>
       </router-link>
-      <router-link to="/signIn">
-        <button class="button" type="button">Sign in</button>
-      </router-link>
+      <!-- <router-link to="/signIn">
+        <button class="button" type="button">Sign in</button> -->
+      <!-- </router-link> -->
     </div>
   </div>
   <div v-show="!!currentUser">
@@ -127,11 +133,21 @@ const sendEmail = async (tutor) => {
       </div>
       <div v-for="tutor in tutors" class="card w3-third">
         <!-- <p><img height="200" width="200" v-bind:src="tutor.picture ?? ''" /></p> -->
-        <p><strong>Name:</strong> {{ tutor.name }}</p>
+        <p>Name: {{ tutor.name }}</p>
         <!-- TODO: make this where you select which subject you are wanting a tutor for -->
-        <p>Subject: {{ tutor.subjects.join(",") }}</p>
         <p>
-          <button @click="sendEmail(tutor)">Contact tutor!</button>
+          Subjects:
+          <select v-model="tutor.selectedSubject">
+            <option disabled value="">Please select one</option>
+            <option v-for="option in tutor.subjects" :value="option">
+              {{ option }}
+            </option>
+          </select>
+        </p>
+        <p>
+          <button :disabled="!tutor.selectedSubject" @click="sendEmail(tutor)">
+            Contact tutor!
+          </button>
         </p>
       </div>
     </div>

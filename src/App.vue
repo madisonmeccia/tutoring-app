@@ -15,11 +15,14 @@ const signOut = () => {
 
 <template>
   <div class="routers">
-    <router-link to="/about" class="router grow-2">About Us</router-link>
+    <router-link to="/about" class="router">About Us</router-link>
     <router-link to="/findTutor" class="router">Find a Tutor</router-link>
     <router-link to="/becomeTutor" class="router">Be a Tutor</router-link>
     <router-link to="/faq" class="router">FAQs</router-link>
     <router-link to="/home" class="router">Home</router-link>
+    <router-link to="/signIn" class="router" v-show="!currentUser"
+      >Sign In</router-link
+    >
     <a @click="signOut" v-show="!!currentUser">Sign Out</a>
   </div>
   <router-view></router-view>

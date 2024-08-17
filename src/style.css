@@ -65,6 +65,7 @@ h3 {
 
 h1 {
   padding-top: 2rem;
+  color:lightgray;
 }
 h2 {
   padding-top: 2rem;
@@ -89,7 +90,13 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
-
+button:hover:disabled {
+  border-color: transparent;
+}
+button:disabled,
+button[disabled] {
+  color: lightsteelblue;
+}
 .card {
   padding: 2em 0;
   background-color: lightsteelblue;

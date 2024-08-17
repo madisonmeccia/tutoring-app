@@ -16,7 +16,6 @@ const confirmPassword = ref("");
 const emailAddress = ref("");
 const subjects = ref([]);
 const bio = ref("");
-const picture = ref("");
 const $toast = useToast();
 const options = ref([]);
 const title = ref("Add Tutor!");
@@ -43,7 +42,6 @@ const loadUser = async () => {
   name.value = user.name;
   emailAddress.value = user.email;
   // password.value = user.password;
-  picture.value = user.picture;
   subjects.value = user.subjects.map((name) =>
     options.value.find((subject) => subject.name === name)
   );
@@ -81,19 +79,19 @@ const isFormInvalid = () => {
   );
 };
 
-const addPicture = (e) => {
-  const file = e.target.files[0];
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    //const base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
-    // store file
-    //localStorage.setItem('wallpaper', base64String);
-    // display image
-    //  let img = document.getElementById("image");
-    picture.value = reader.result;
-  };
-  reader.readAsDataURL(file);
-};
+// const addPicture = (e) => {
+//   const file = e.target.files[0];
+//   const reader = new FileReader();
+//   reader.onloadend = () => {
+//     //const base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+//     // store file
+//     //localStorage.setItem('wallpaper', base64String);
+//     // display image
+//     //  let img = document.getElementById("image");
+//     picture.value = reader.result;
+//   };
+//   reader.readAsDataURL(file);
+// };
 const addTutor = async () => {
   try {
     //loading.value = true;
@@ -102,7 +100,7 @@ const addTutor = async () => {
       email: emailAddress.value,
       subjects: subjects.value.map((subject) => subject.name),
       bio: bio.value,
-      picture: picture.value,
+      // picture: picture.value,
     };
     const signupResponse = await supabase.auth.signUp({
       email: emailAddress.value,
@@ -126,7 +124,7 @@ const updateTutor = async () => {
       name: name.value,
       subjects: subjects.value.map((subject) => subject.name),
       bio: bio.value,
-      picture: picture.value,
+      // picture: picture.value,
     };
     const { error } = await supabase
       .from("tutors")
@@ -242,5 +240,4 @@ const submitChanges = () => {
 .read-the-docs {
   color: #888;
 }
-
 </style>

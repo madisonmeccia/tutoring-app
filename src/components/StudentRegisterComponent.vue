@@ -38,7 +38,6 @@ const addStudent = async () => {
   const student = {
     name: name.value,
     email: emailAddress.value,
-    password: password.value,
     subject: subject.value,
     goals: goals.value,
   };
