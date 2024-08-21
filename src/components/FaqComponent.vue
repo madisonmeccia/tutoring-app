@@ -129,9 +129,9 @@ const toggleElement = (id) => {
         </div>
       </p>
       <!-- This is the answer -->
-      <div :id="'q' + groupIndex + questionIndex" class="hidden border-solid border-2 border-white p-6">
+      <p :id="'q' + groupIndex + questionIndex" class="hidden border-solid border-2 border-white p-6">
         A: {{ question.a }}
-      </div>
+      </p>
     </div>
 
   </div>
