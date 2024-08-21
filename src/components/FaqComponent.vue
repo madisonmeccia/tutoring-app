@@ -81,20 +81,23 @@ const questionGroups = ref([{
 
 ]}]);
 
-const PLUS_SYMBOL = "+";
-const MINUS_SYMBOL = "-";
+const toggleHideShow = (el) => {
+  if (el.classList.contains('block')) {
+    el.classList.add('hidden');
+    el.classList.remove('block');
+  } else {
+    el.classList.add('block');
+    el.classList.remove('hidden');
+  }
+}
 
 const toggleElement = (id) => {
-  const icon = document.getElementById(id + 'icon');
+  const plus = document.getElementById(id + 'plus');
+  const minus = document.getElementById(id + 'minus');
   const answer = document.getElementById(id);
-  if (answer.style.display == 'none') {
-    answer.style.display = '';
-    icon.innerHTML = MINUS_SYMBOL;
-  }
-  else {
-    answer.style.display = 'none';
-    icon.innerHTML = PLUS_SYMBOL;
-  }
+  toggleHideShow(answer);
+  toggleHideShow(minus);
+  toggleHideShow(plus);
 };
 </script>
 
@@ -107,17 +110,30 @@ const toggleElement = (id) => {
     <h2>{{ group.name }}</h2>
     <div v-for="(question, questionIndex) in group.questions">
       <p style="cursor: pointer">
-        <div @click="toggleElement('q' + groupIndex + questionIndex)" style="display: flex; flex-direction: row;">
-          <div :id="'q' + groupIndex + questionIndex + 'icon'" class="inline text-center min-w-4 text-white font-extrabold text-3xl me-2">{{ PLUS_SYMBOL }}</div>
-          <div style="align-self: center">Q: {{ question.q }}</div>
+        <div @click="toggleElement('q' + groupIndex + questionIndex)" class="flex flex-row">
+          <!-- This is the plus image -->
+          <svg :id="'q' + groupIndex + questionIndex + 'plus'" class="block size-6" xmlns="http://www.w3.org/2000/svg"
+            width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+            <path d="M12 5v14"></path>
+          </svg>
+          <!-- This is the minus image -->
+          <svg :id="'q' + groupIndex + questionIndex + 'minus'" class="hidden size-6" xmlns="http://www.w3.org/2000/svg"
+            width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+          </svg>
+          <!-- This is the question -->
+          <div class="self-center ms-2">Q: {{ question.q }}</div>
         </div>
       </p>
-      <div :id="'q' + groupIndex + questionIndex" style="display:none;" class="border-solid border-2 border-white p-6">
+      <!-- This is the answer -->
+      <div :id="'q' + groupIndex + questionIndex" class="hidden border-solid border-2 border-white p-6">
         A: {{ question.a }}
       </div>
-
     </div>
-  
+
   </div>
 </template>
 
