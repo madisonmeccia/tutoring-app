@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useToast } from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-sugar.css";
 import { supabase } from "../lib/supabaseClient";
+import { useRouter } from "vue-router";
 
 const name = ref("");
 const password = ref("");
@@ -12,6 +13,7 @@ const subject = ref("");
 const goals = ref("");
 const options = ref([]);
 const $toast = useToast();
+const router = useRouter();
 const loadSubjects = async () => {
   const { data } = await supabase.from("subjects").select();
   options.value = data;
@@ -52,24 +54,27 @@ const addStudent = async () => {
   if (error) throw error;
 
   $toast.success(`Added student ${student.name}`);
+  setTimeout(() => {
+    router.push("/signIn");
+  }, 1500);
 };
 </script>
 
 <template>
-  <h1>Add Student!</h1>
+  <h1>Register as a Student</h1>
 
   <div class="card">
-    <form v-on:submit.prevent="addStudent">
-      <div>Enter Information</div>
+    <form class="p-2" v-on:submit.prevent="addStudent">
+      <p>Enter Information</p>
       <div class="fields">
         <p>Name:</p>
         <div class="field"><input type="text" required v-model="name" /></div>
-        <p>email address:</p>
+        <p>Email address:</p>
         <div class="field">
           <input type="email" required v-model="emailAddress" />
         </div>
 
-        <p>password:</p>
+        <p>Password:</p>
         <div class="field">
           <input type="password" required v-model="password" />
         </div>
@@ -83,7 +88,7 @@ const addStudent = async () => {
           />
         </div>
 
-        <p>subject:</p>
+        <p>Subject:</p>
         <div class="field">
           <select v-model="subject">
             <option v-for="option in options" :value="option.name">
@@ -92,7 +97,7 @@ const addStudent = async () => {
           </select>
         </div>
 
-        <p>goals:</p>
+        <p>Goals:</p>
         <div class="field">
           <textarea
             v-model="goals"

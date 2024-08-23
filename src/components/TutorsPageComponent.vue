@@ -10,9 +10,9 @@ import TutorRegisterComponent from "./TutorRegisterComponent.vue";
 const router = useRouter();
 const currentUser = ref(sessionStorage.getItem("currentUser"));
 const $toast = useToast();
-const PUBLIC_EMAILJS_KEY = "0iwuRzrxiSnGFqO4-";
-const EMAILJS_SERVICEID = "service_biwmoes";
-const EMAILJS_EMAIL_TEMPLATE_ID = "template_lg465f8";
+const PUBLIC_EMAILJS_KEY = "9uKLSpab0x1_vWyWy";
+const EMAILJS_SERVICEID = "service_qqraut2";
+const EMAILJS_EMAIL_TEMPLATE_ID = "template_geg3bfg";
 
 emailjs.init({
   publicKey: PUBLIC_EMAILJS_KEY,
