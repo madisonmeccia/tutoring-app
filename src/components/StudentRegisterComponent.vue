@@ -12,6 +12,9 @@ const emailAddress = ref("");
 const subject = ref("");
 const goals = ref("");
 const options = ref([]);
+const today = new Date();
+const thisYear = today.getFullYear();
+const gradyear = ref(today.getMonth() > 5 ? thisYear + 1 : thisYear);
 const $toast = useToast();
 const router = useRouter();
 const loadSubjects = async () => {
@@ -27,12 +30,15 @@ const checkPassword = () => {
   }
 };
 const isFormInvalid = () => {
+  console.log(subject.value);
   return (
     name.value.trim() == "" ||
     emailAddress.value.trim() == "" ||
     password.value.trim() == "" ||
     confirmPassword.value.trim() == "" ||
-    subject.value.trim() == ""
+    //subject.value.trim() == "" ||
+    //gradyear.value.trim() == "" ||
+    goals.value.trim() == ""
   );
 };
 const addStudent = async () => {
@@ -40,8 +46,9 @@ const addStudent = async () => {
   const student = {
     name: name.value,
     email: emailAddress.value,
-    subject: subject.value,
+    //subject: subject.value,
     goals: goals.value,
+    gradyear: gradyear.value,
   };
   const signupResponse = await supabase.auth.signUp({
     email: emailAddress.value,
@@ -49,9 +56,17 @@ const addStudent = async () => {
     options: { data: { role: "student" } },
   });
   if (signupResponse.error) throw signupResponse.error;
-  const { error } = await supabase.from("students").insert(student);
+  const { data, error } = await supabase
+    .from("students")
+    .insert(student)
+    .select();
 
   if (error) throw error;
+  const subjectResponse = await supabase.from("studentsandsubjects").insert({
+    student_id: data[0].id,
+    subject_id: subject.value,
+  });
+  if (subjectResponse.error) throw subjectResponse.error;
 
   $toast.success(`Added student ${student.name}`);
   setTimeout(() => {
@@ -88,10 +103,15 @@ const addStudent = async () => {
           />
         </div>
 
+        <p>Graduation Year:</p>
+        <div class="field">
+          <input type="number" required v-model="gradyear" />
+        </div>
+
         <p>Subject:</p>
         <div class="field">
           <select v-model="subject">
-            <option v-for="option in options" :value="option.name">
+            <option v-for="option in options" :value="option.id">
               {{ option.title }}
             </option>
           </select>

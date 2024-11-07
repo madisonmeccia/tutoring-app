@@ -15,6 +15,9 @@ const password = ref("");
 const confirmPassword = ref("");
 const emailAddress = ref("");
 const subjects = ref([]);
+const today = new Date();
+const thisYear = today.getFullYear();
+const gradyear = ref(today.getMonth() > 5 ? thisYear + 1 : thisYear);
 const bio = ref("");
 const $toast = useToast();
 const options = ref([]);
@@ -34,16 +37,23 @@ const loadUser = async () => {
     return;
   }
   const userEmail = sessionStorage.getItem("currentUser");
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("tutors")
     .select()
     .eq("email", userEmail);
+  if (error) throw error;
   const user = data[0];
   name.value = user.name;
   emailAddress.value = user.email;
+  gradyear.value = user.gradyear;
   // password.value = user.password;
-  subjects.value = user.subjects.map((name) =>
-    options.value.find((subject) => subject.name === name)
+  const subjectResponse = await supabase
+    .from("tutorsandsubjects")
+    .select()
+    .eq("tutor_id", user.id);
+  if (subjectResponse.error) throw subjectResponse.error;
+  subjects.value = options.value.filter((subject) =>
+    subjectResponse.data.some((ea) => ea.subject_id === subject.id)
   );
   bio.value = user.bio;
 };
@@ -97,19 +107,30 @@ const addTutor = async () => {
     const tutor = {
       name: name.value,
       email: emailAddress.value,
-      subjects: subjects.value.map((subject) => subject.name),
       bio: bio.value,
-      // picture: picture.value,
+      gradyear: gradyear.value,
+      // information being gathered for all tutors which will be featured on their profile
     };
     const signupResponse = await supabase.auth.signUp({
       email: emailAddress.value,
       password: password.value,
       options: { data: { role: "tutor" } },
-    });
+    }); // inputing tutor data into supabase
     if (signupResponse.error) throw signupResponse.error;
-    const { error } = await supabase.from("tutors").insert(tutor);
-
+    const { data, error } = await supabase
+      .from("tutors")
+      .insert(tutor)
+      .select();
+    // error checking
     if (error) throw error;
+    subjects.value.forEach(async (subject) => {
+      const subjectResponse = await supabase.from("tutorsandsubjects").insert({
+        tutor_id: data[0].id,
+        subject_id: subject.id,
+      });
+      if (subjectResponse.error) throw subjectResponse.error;
+    });
+
     $toast.success(`Added tutor ${tutor.name}`);
   } catch (error) {
     $toast.error(error.message);
@@ -121,16 +142,32 @@ const updateTutor = async () => {
     //loading.value = true;
     const tutor = {
       name: name.value,
-      subjects: subjects.value.map((subject) => subject.name),
+      //subjects: subjects.value.map((subject) => subject.name),
       bio: bio.value,
+      gradyear: gradyear.value,
       // picture: picture.value,
     };
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("tutors")
       .update(tutor)
+      .select()
       .eq("email", emailAddress.value);
 
     if (error) throw error;
+    //remove previous subject for tutor
+    const response = await supabase
+      .from("tutorsandsubjects")
+      .delete()
+      .eq("tutor_id", data[0].id);
+    if (response.error) throw response.error;
+    //update the subjects for tutor
+    subjects.value.forEach(async (subject) => {
+      const subjectResponse = await supabase.from("tutorsandsubjects").insert({
+        tutor_id: data[0].id,
+        subject_id: subject.id,
+      });
+      if (subjectResponse.error) throw subjectResponse.error;
+    });
     $toast.success(`Updated tutor ${tutor.name}`);
   } catch (error) {
     $toast.error(error.message);
@@ -215,6 +252,11 @@ const submitChanges = () => {
               {{ option.title }}
             </option>
           </select> -->
+        </div>
+
+        <p class="required">Graduation Year:</p>
+        <div class="field">
+          <input type="number" required v-model="gradyear" />
         </div>
 
         <p>Bio:</p>

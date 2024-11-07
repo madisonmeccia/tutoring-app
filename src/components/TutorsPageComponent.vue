@@ -34,18 +34,66 @@ emailjs.init({
 const searchField = ref("");
 //load tutors get, JSON parse
 const tutors = ref([]);
-const search = async () => {
-  const { data } = await supabase
+const currentStudent = ref();
+// const search = async () => {
+//   const { data } = await supabase
+//     .from("tutors")
+//     .select()
+//     .contains("subjects", [searchField.value]);
+
+//   tutors.value = data;
+// };
+const loadTutors = async () => {
+  const studentSubjectResponse = await supabase
+    .from("studentsandsubjects")
+    .select()
+    .eq("student_id", currentStudent.value.id);
+  if (studentSubjectResponse.error) throw studentSubjectResponse.error;
+  const subjectIds = studentSubjectResponse.data.map((ea) => ea.subject_id);
+  const tutorSubjectResponse = await supabase
+    .from("tutorsandsubjects")
+    .select()
+    .in("subject_id", subjectIds);
+  if (tutorSubjectResponse.error) throw tutorSubjectResponse.error;
+  const tutorIds = tutorSubjectResponse.data.map((ea) => ea.tutor_id);
+  const { data, error } = await supabase
     .from("tutors")
     .select()
-    .contains("subjects", [searchField.value]);
+    .in("id", tutorIds);
+  if (error) throw error;
+  const subjectsResponse = await supabase
+    .from("subjects")
+    .select()
+    .in("id", subjectIds);
+  data.forEach((ea) => {
+    const filteredSubjectIds = tutorSubjectResponse.data
+      .filter((row) => row.tutor_id === ea.id)
+      .map((x) => x.subject_id);
+    const tutorSubjects = subjectsResponse.data.filter((subj) =>
+      filteredSubjectIds.includes(subj.id)
+    );
+    ea.subjects = tutorSubjects;
+  });
 
-  tutors.value = data;
-};
-const loadTutors = async () => {
-  const { data } = await supabase.from("tutors").select();
+  //option to use join
   // const data = mockTutors();
   tutors.value = data;
+};
+const loadStudent = () => {
+  return new Promise(async (resolve, reject) => {
+    const userEmail = sessionStorage.getItem("currentUser");
+    if (!userEmail) {
+      // TODO Need to redirect to login
+      router.push("/signIn");
+      return;
+    }
+    const { data } = await supabase
+      .from("students")
+      .select()
+      .eq("email", userEmail);
+    currentStudent.value = data[0];
+    resolve(data[0]);
+  });
 };
 // const mockTutors = () => {
 //   return [{
@@ -62,32 +110,25 @@ const loadTutors = async () => {
 //     email: 'simone@usa.org'
 //   }]
 // };
-loadTutors();
+try {
+  const init = async () => {
+    await loadStudent();
+    loadTutors();
+  };
+  init();
+} catch (error) {
+  console.error(error);
+}
 const sendEmail = async (tutor) => {
-  // alert(RESEND_API_KEY);
   const userEmail = sessionStorage.getItem("currentUser");
-  if (!userEmail) {
-    // TODO Need to redirect to login
-    router.push("/home");
-    return;
-  }
-  const { data } = await supabase
-    .from("students")
-    .select()
-    .eq("email", userEmail);
-  const currentStudent = data[0];
-  // const currentStudent = {
-  //   name: 'Dwight Schrute'
-  // };
   try {
-    // TODO: Madison to setup emailjs account with public_key, service_id, and template
     emailjs.send(
       EMAILJS_SERVICEID,
       EMAILJS_EMAIL_TEMPLATE_ID,
       {
-        from_name: currentStudent.name,
+        from_name: currentStudent.value.name,
         to_name: tutor.name,
-        tutoring_subject: tutor.selectedSubject,
+        tutoring_subject: tutor.selectedSubject.title,
         reply_to: userEmail,
         to_email: tutor.email,
         from_email: userEmail,
@@ -125,22 +166,22 @@ const sendEmail = async (tutor) => {
     <p>
       Search for a tutor that meets your needs and reach out to them via email.
     </p>
-    <input placeholder="subject..." v-model="searchField" />
-    <button @click="search">Search!</button>
+    <!-- <input placeholder="subject..." v-model="searchField" />
+    <button @click="search">Search!</button> -->
     <div class="w3-row-padding">
       <div class="noTutorsMessage" v-show="!tutors || tutors.length === 0">
         No matching tutors were found.
       </div>
-      <div v-for="tutor in tutors" class="card w3-third">
+      <div v-for="tutor in tutors" class="card md:w-1/4 md:inline-block">
         <!-- <p><img height="200" width="200" v-bind:src="tutor.picture ?? ''" /></p> -->
         <p>Name: {{ tutor.name }}</p>
-        <!-- TODO: make this where you select which subject you are wanting a tutor for -->
+        <p v-show="!!tutor.bio">About Me: {{ tutor.bio }}</p>
         <p>
           Subjects:
           <select v-model="tutor.selectedSubject">
             <option disabled value="">Please select one</option>
             <option v-for="option in tutor.subjects" :value="option">
-              {{ option }}
+              {{ option.title }}
             </option>
           </select>
         </p>
